@@ -1,7 +1,10 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {AppModule} from './app/app.module';
+import {BASE_URL} from "./app/core/constants/injection";
+import {environment} from "./environments/environment";
 
-import { AppModule } from './app/app.module';
 
-
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic([
+  {provide: BASE_URL, useValue: environment.apiURL}
+]).bootstrapModule(AppModule)
   .catch(err => console.error(err));

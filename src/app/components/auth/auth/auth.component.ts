@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AuthService} from "../../../services/auth.service";
+import {Router} from "@angular/router";
+import {LoadingService} from "../../../services/loading.service";
 
 @Component({
   selector: 'app-auth',
@@ -7,14 +11,30 @@ import { Component } from '@angular/core';
 })
 export class AuthComponent {
 
-  public tabAuth = [
-    { route : "/login" , title : "Login" },
-    { route : "/register" , title : "Register" }
-  ] ;
-  public tabActive : any;
+  public formLogin: FormGroup;
+
+  constructor(private fb: FormBuilder , private authService : AuthService , protected loadingService : LoadingService, private router : Router) {
+    this.formLogin = this.fb.group({
+      username: this.fb.control('', [Validators.required, Validators.min(8)]),
+      password: this.fb.control('', [Validators.required, Validators.min(8)]),
+    })
+  }
 
 
-  changeTab(param: any) : void {
-    this.tabActive = param ;
+  login() {
+    let authRequest : any = {
+      username : this.formLogin.value['username'],
+      password : this.formLogin.value['password']
+    }
+    console.log(authRequest);
+    this.authService.loginHttp(authRequest).subscribe({
+      next : value =>  {
+        this.authService.saveToken(value.token);
+        this.router.navigateByUrl('/home');
+      },
+      error : err =>  {
+        console.log(err)
+      }
+    }) ;
   }
 }
