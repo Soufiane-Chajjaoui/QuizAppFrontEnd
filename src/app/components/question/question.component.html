@@ -1,0 +1,10 @@
+<div class="bg-white/50 w-full min-h-[calc(100vh-5rem)] flex">
+  <ng-container *ngIf="quizDetails$ | async as listquestion ; else failureOrLoading">
+    <div class="w-10 h-24 bg-red-600" *ngFor="let question of listquestion.questions">
+      {{ question.id }}
+    </div>
+  </ng-container>
+  <ng-template #failureOrLoading>
+    <div class="text-red-900">Error Or Loading</div>
+  </ng-template>
+</div>
